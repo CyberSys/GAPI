@@ -4,6 +4,8 @@
 #include "Enums.h"
 #include "MemoryLayout.h"
 
+#include <glm.hpp>
+
 namespace GAPI
 {
 
@@ -52,11 +54,50 @@ namespace GAPI
 	GAPI_API unsigned int
 	GAPI_CreateProgram(char* vertex, char* pixel);
 
+	GAPI_API unsigned int
+	GAPI_CreateVertexShader(char* vertex);
+
+	GAPI_API unsigned int
+	GAPI_CreatePixelShader(char* pixel);
+
+	GAPI_API unsigned int
+	GAPI_CreateGeomtreyShader(char* GS);
+
+	GAPI_API unsigned int
+	GAPI_CreateComputeShader(char* CS);
+
+	GAPI_API void
+	GAPI_CheckCompileErrors(unsigned int shader_id, std::string type);
+
 	GAPI_API void
 	GAPI_DeleteShader(unsigned int program_id, unsigned int shader_id);
 
 	GAPI_API void
 	GAPI_BindShader(unsigned int program_id);
+
+	GAPI_API void
+	GAPI_SetUniform_int(unsigned int program_id, char* name, int val);
+
+	GAPI_API void
+	GAPI_SetUniform_float(unsigned int program_id, char* name, float val);
+
+	GAPI_API void
+	GAPI_SetUniform_vec2(unsigned int program_id, char* name, glm::vec2 &value);
+
+	GAPI_API void
+	GAPI_SetUniform_vec3(unsigned int program_id, char* name, glm::vec3 &value);
+
+	GAPI_API void
+	GAPI_SetUniform_vec4(unsigned int program_id, char* name, glm::vec4 &value);
+
+	GAPI_API void
+	GAPI_SetUniform_mat2(unsigned int program_id, char* name, glm::mat2 &mat);
+
+	GAPI_API void
+	GAPI_SetUniform_mat3(unsigned int program_id, char* name, glm::mat3 &mat);
+
+	GAPI_API void
+	GAPI_SetUniform_mat4(unsigned int program_id, char* name, glm::mat2 &mat);
 
 	GAPI_API unsigned int
 	GAPI_CreateUniformBuffer(unsigned int size, void* data, unsigned int slot);
@@ -85,7 +126,7 @@ namespace GAPI
 			float red, float green, float blue, float alpha);
 
 	GAPI_API unsigned int
-	GAPI_CreateVertexArray(unsigned int VBuf_id, unsigned int IBuf_id, MemoryLayout* input_layout);
+	GAPI_CreateVertexArray(unsigned int VBuf_id, unsigned int IBuf_id, MemoryLayout& input_layout);
 
 	GAPI_API void
 	GAPI_Draw(Primitive type, unsigned int VAOBuf_id, unsigned int VBuf_id, unsigned int Vert_count);

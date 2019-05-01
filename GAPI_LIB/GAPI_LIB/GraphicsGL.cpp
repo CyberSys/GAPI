@@ -1,6 +1,7 @@
 #include "GraphicsGL.h"
 #include <glew.h>
 #include <string.h>
+#include <iostream>
 
 namespace GAPI
 {
@@ -321,6 +322,8 @@ namespace GAPI
 			printf("Cannot compile vertex shader");
 		}
 
+		GAPI_CheckCompileErrors(vertexShader, "VERTEX");
+
 		//pixel shader
 		unsigned int pixelShader = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -334,6 +337,8 @@ namespace GAPI
 			glGetShaderInfoLog(pixelShader, 1024, NULL, error);
 			printf("Cannot compile pixel shader");
 		}
+
+		GAPI_CheckCompileErrors(pixelShader, "FRAGMENT");
 
 		unsigned int program = glCreateProgram();
 
@@ -360,6 +365,93 @@ namespace GAPI
 	}
 
 	GAPI_API 
+	unsigned int GAPI_CreateVertexShader(char * vertex)
+	{
+		unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+
+		char* error = new char[1024];
+		const GLchar* p[1];
+		p[0] = vertex;
+		glShaderSource(vertexShader, 1, p, NULL);
+		glCompileShader(vertexShader);
+
+		GLint res = 0;
+		glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &res);
+
+		if (res == GL_FALSE) {
+			glGetShaderInfoLog(vertexShader, 1024, NULL, error);
+			printf("Cannot compile vertex shader");
+		}
+
+		GAPI_CheckCompileErrors(vertexShader, "VERTEX");
+
+		return vertexShader;
+	}
+
+	GAPI_API 
+	unsigned int GAPI_CreatePixelShader(char * pixel)
+	{
+		unsigned int pixelShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+		GLint res = 0;
+		const GLchar* p[1];
+		char* error = new char[1024];
+		p[0] = pixel;
+		glShaderSource(pixelShader, 1, p, NULL);
+		glCompileShader(pixelShader);
+
+		glGetShaderiv(pixelShader, GL_COMPILE_STATUS, &res);
+
+		if (res == GL_FALSE) {
+			glGetShaderInfoLog(pixelShader, 1024, NULL, error);
+			printf("Cannot compile pixel shader");
+		}
+
+		GAPI_CheckCompileErrors(pixelShader, "FRAGMENT");
+
+		return pixelShader;
+	}
+
+	GAPI_API 
+	unsigned int GAPI_CreateGeomtreyShader(char * GS)
+	{
+		//to implement here..
+		return 0;
+	}
+
+	GAPI_API
+	unsigned int GAPI_CreateComputeShader(char * CS)
+	{
+		//to implement here..
+		return 0;
+	}
+
+	GAPI_API 
+	void GAPI_CheckCompileErrors(unsigned int shader_id, std::string type)
+	{
+		GLint success;
+		GLchar infoLog[1024];
+		if (type != "PROGRAM")
+		{
+			glGetShaderiv(shader_id, GL_COMPILE_STATUS, &success);
+			if (!success)
+			{
+				glGetShaderInfoLog(shader_id, 1024, NULL, infoLog);
+				std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+			}
+		}
+		else
+		{
+			glGetProgramiv(shader_id, GL_LINK_STATUS, &success);
+			if (!success)
+			{
+				glGetProgramInfoLog(shader_id, 1024, NULL, infoLog);
+				std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+			}
+		}
+	}
+
+	GAPI_API 
 	void GAPI_DeleteShader(unsigned int program_id, unsigned int shader_id)
 	{
 		glDeleteShader(shader_id);
@@ -370,6 +462,54 @@ namespace GAPI
 	void GAPI_BindShader(unsigned int program_id)
 	{
 		glUseProgram(program_id);
+	}
+
+	GAPI_API 
+	void GAPI_SetUniform_int(unsigned int program_id, char * name, int val)
+	{
+		glUniform1i( glGetUniformLocation(program_id, name), val);
+	}
+
+	GAPI_API 
+	void GAPI_SetUniform_float(unsigned int program_id, char * name, float val)
+	{
+		glUniform1f( glGetUniformLocation(program_id, name), val);
+	}
+
+	GAPI_API 
+	void GAPI_SetUniform_vec2(unsigned int program_id, char * name, glm::vec2 & value)
+	{
+		glUniform2fv( glGetUniformLocation(program_id, name),1, &value[0]);
+	}
+
+	GAPI_API 
+	void GAPI_SetUniform_vec3(unsigned int program_id, char * name, glm::vec3 & value)
+	{
+		glUniform3fv( glGetUniformLocation(program_id, name), 1, &value[0]);
+	}
+
+	GAPI_API 
+	void GAPI_SetUniform_vec4(unsigned int program_id, char * name, glm::vec4 & value)
+	{
+		glUniform4fv( glGetUniformLocation(program_id, name), 1, &value[0]);
+	}
+
+	GAPI_API 
+	void GAPI_SetUniform_mat2(unsigned int program_id, char * name, glm::mat2 & mat)
+	{
+		glUniformMatrix2fv( glGetUniformLocation(program_id, name), 1, GL_FALSE, &mat[0][0]);
+	}
+
+	GAPI_API 
+	void GAPI_SetUniform_mat3(unsigned int program_id, char * name, glm::mat3 & mat)
+	{
+		glUniformMatrix3fv( glGetUniformLocation(program_id, name), 1, GL_FALSE, &mat[0][0]);
+	}
+
+	GAPI_API 
+	void GAPI_SetUniform_mat4(unsigned int program_id, char * name, glm::mat2 & mat)
+	{
+		glUniformMatrix4fv( glGetUniformLocation(program_id, name), 1, GL_FALSE, &mat[0][0]);
 	}
 
 	GAPI_API
@@ -468,7 +608,7 @@ namespace GAPI
 	}
 
 	GAPI_API 
-	unsigned int GAPI_CreateVertexArray(unsigned int VBuf_id, unsigned int IBuf_id, MemoryLayout* input_layout)
+	unsigned int GAPI_CreateVertexArray(unsigned int VBuf_id, unsigned int IBuf_id, MemoryLayout& input_layout)
 	{
 		unsigned int VAO;
 		glGenVertexArrays(1, &VAO);
@@ -476,12 +616,10 @@ namespace GAPI
 
 		GAPI_BindVertexBuffer(VBuf_id);
 
-		MemoryLayout layout = *input_layout;
-
-		for (int i = 0; i < layout.elements.size(); i++)
+		for (int i = 0; i < input_layout.elements.size(); ++i)
 		{
 			glEnableVertexAttribArray(i);
-			glVertexAttribPointer(i, layout.elements[i].components, GL_FLOAT, GL_FALSE, layout.size, (void*)(layout.elements[i].offset));
+			glVertexAttribPointer(i, input_layout.elements[i].components, GL_FLOAT, GL_FALSE, input_layout.size, (void*)(input_layout.elements[i].offset));
 		}
 
 		//may cause erorr if ibuff == 0
