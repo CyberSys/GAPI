@@ -38,6 +38,63 @@ namespace GAPI
 		}
 	}
 
+	GAPI_API void GAPI_Enable(GLcapability cap)
+	{
+		switch (cap)
+		{
+			case GLcapability::BLENDING:
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //will use it as initial option.
+				break;
+			case GLcapability::FACE_CULLING:
+				glEnable(GL_CULL_FACE);
+				break;
+			case GLcapability::MULTISAMPLING:
+				glEnable(GL_MULTISAMPLE);
+				break;
+			case GLcapability::DEPTH_TEST:
+				glEnable(GL_DEPTH_TEST);
+				break;
+			case GLcapability::SCISSOR_TEST:
+				glEnable(GL_SCISSOR_TEST);
+				break;
+			case GLcapability::STENCIL_TEST:
+				glEnable(GL_STENCIL_TEST);
+				break;
+			default:
+				printf("no option like that here.. \n");
+				break;
+		}
+	}
+
+	GAPI_API void GAPI_Disable(GLcapability cap)
+	{
+		switch (cap)
+		{
+			case GLcapability::BLENDING:
+				glDisable(GL_BLEND);
+				break;
+			case GLcapability::FACE_CULLING:
+				glDisable(GL_CULL_FACE);
+				break;
+			case GLcapability::MULTISAMPLING:
+				glDisable(GL_MULTISAMPLE);
+				break;
+			case GLcapability::DEPTH_TEST:
+				glDisable(GL_DEPTH_TEST);
+				break;
+			case GLcapability::SCISSOR_TEST:
+				glDisable(GL_SCISSOR_TEST);
+				break;
+			case GLcapability::STENCIL_TEST:
+				glDisable(GL_STENCIL_TEST);
+				break;
+			default:
+				printf("no option like that here.. \n");
+				break;
+		}
+	}
+
 	GAPI_API 
 	void GAPI_SetClearColor(float r, float g, float b, float a)
 	{
