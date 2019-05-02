@@ -103,7 +103,7 @@ namespace GAPI
 	GAPI_SetUniform_mat3(unsigned int program_id, char* name, glm::mat3 &mat);
 
 	GAPI_API void
-	GAPI_SetUniform_mat4(unsigned int program_id, char* name, glm::mat2 &mat);
+	GAPI_SetUniform_mat4(unsigned int program_id, char* name, glm::mat4 &mat);
 
 	GAPI_API unsigned int
 	GAPI_CreateUniformBuffer(unsigned int size, void* data, unsigned int slot);

@@ -564,7 +564,7 @@ namespace GAPI
 	}
 
 	GAPI_API 
-	void GAPI_SetUniform_mat4(unsigned int program_id, char * name, glm::mat2 & mat)
+	void GAPI_SetUniform_mat4(unsigned int program_id, char * name, glm::mat4 & mat)
 	{
 		glUniformMatrix4fv( glGetUniformLocation(program_id, name), 1, GL_FALSE, &mat[0][0]);
 	}
