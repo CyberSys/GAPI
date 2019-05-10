@@ -274,6 +274,32 @@ namespace GAPI
 	}
 
 	GAPI_API 
+	void GAPI_UpdateVertexBuffer(unsigned int vertexbuffer, RenderType type, unsigned int size, void * data)
+	{
+		if (vertexbuffer == -1)
+			printf("Cannot generate vertex buffer");
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+
+		switch (type)
+		{
+			//static
+			case RenderType::STATIC:
+				glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+				break;
+
+			//dynamic
+			case RenderType::DYNAMIC:
+				glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
+				break;
+
+			default:
+				break;
+		}
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
+	GAPI_API 
 	unsigned int GAPI_CreateIndexBuffer(RenderType type, unsigned int size, void * data)
 	{
 		GLuint id = -1;

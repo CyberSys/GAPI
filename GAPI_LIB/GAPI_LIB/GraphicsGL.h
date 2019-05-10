@@ -39,6 +39,9 @@ namespace GAPI
 	GAPI_API unsigned int
 	GAPI_CreateVertexBuffer(RenderType type, unsigned int size, void* data);
 
+	GAPI_API void
+	GAPI_UpdateVertexBuffer(unsigned int vertexbuffer, RenderType type, unsigned int size, void* data);
+
 	GAPI_API unsigned int
 	GAPI_CreateIndexBuffer(RenderType type, unsigned int size, void* data);
 
